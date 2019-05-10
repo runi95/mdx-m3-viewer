@@ -242,13 +242,18 @@ export default class ModelViewer extends EventEmitter {
           let dataType = handlerAndDataType[1];
 
           if (src instanceof Promise) {
-            src.then((resolved) => {
-                if (typeof resolved === "object" && resolved.hasOwnProperty("data")) {
-                    resource.loadData(resolved.data);
+            src.then(result => {
+                if (typeof result === "object" && result.hasOwnProperty("data")) {
+                    resource.loadData(result.data);
                 } else {
-                    resource.loadData(resolved);
+                    resource.loadData(result);
                 }
-            })
+            }).catch(err => {
+              resource.error('FailedToResolve');
+
+              this.emit('error', resource, err, null);
+              return;
+            });
           } else {
             fetchDataType(src, dataType).then((response) => {
               let data = response.data;
