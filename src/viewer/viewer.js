@@ -241,8 +241,16 @@ export default class ModelViewer extends EventEmitter {
         if (serverFetch) {
           let dataType = handlerAndDataType[1];
 
-          fetchDataType(src, dataType)
-            .then((response) => {
+          if (src instanceof Promise) {
+            src.then((resolved) => {
+                if (resolved.hasOwnProperty(data)) {
+                    resource.loadData(resolved.data);
+                } else {
+                    resource.loadData(resolved);
+                }
+            })
+          } else {
+            fetchDataType(src, dataType).then((response) => {
               let data = response.data;
 
               if (response.ok) {
@@ -253,6 +261,7 @@ export default class ModelViewer extends EventEmitter {
                 this.emit('error', resource, response.error, data);
               }
             });
+          }
         } else {
           resource.loadData(src);
         }
