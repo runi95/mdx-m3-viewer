@@ -1,3 +1,5 @@
 node_modules
 dist
 ModelViewer.sublime-workspace
+.idea
+package-lock.json
