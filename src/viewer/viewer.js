@@ -243,7 +243,7 @@ export default class ModelViewer extends EventEmitter {
 
           if (src instanceof Promise) {
             src.then((resolved) => {
-                if (resolved.hasOwnProperty(data)) {
+                if (typeof resolved === "object" && resolved.hasOwnProperty(data)) {
                     resource.loadData(resolved.data);
                 } else {
                     resource.loadData(resolved);
